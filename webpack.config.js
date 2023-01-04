@@ -4,7 +4,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin'); // Importer le plugin 
 module.exports = {
     plugins: [
         new HTMLWebpackPlugin({ // Créer une instance du plugin HTMLWebpackPlugin
-            template: './srx/index.html' // Définir le template HTML à utiliser
+            template: './src/index.html' // Définir le template HTML à utiliser
         })
     ],
 
@@ -19,7 +19,15 @@ module.exports = {
                         presets: ['@babel/preset-env', '@babel/preset-react'] // Utiliser les préréglages '@babel/preset-env' et '@babel/preset-react'
                     }
                 }
+            },
+            {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/, // Exclure les fichiers se trouvant dans node_modules
+                use: ['ts-loader'],
             }
         ]
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.jsx', '.js']
     }
 }
