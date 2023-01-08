@@ -12,15 +12,20 @@ function List(props: { tasks: any[]; }) {
     }
 
     return (
-        <><p>To-do List:</p><ul>
-            {tasks.map((item: any, index: any) => (
-                <Task key={index} item={item} />
-            ))}
-        </ul>
-        <form onSubmit={handleSubmit}>
-        <input value={newTask} onChange={event => setNewTask(event.target.value)} />
-        <button type="submit">Add task</button>
-      </form></>);
+        <><p>To-do List:</p>
+            {tasks.length === 0 ? (
+                <p>No tasks to display</p>
+            ) : (
+                <ul>
+                    {tasks.map((task, index) => (
+                        <li key={index}>{task}</li>
+                    ))}
+                </ul>
+            )}
+            <form onSubmit={handleSubmit}>
+                <input value={newTask} onChange={event => setNewTask(event.target.value)} />
+                <button type="submit">Add task</button>
+            </form></>);
 }
 
 export default List;
