@@ -1,11 +1,9 @@
-import React from 'react';
+import Task from './Task';
 
 function List() {
     return (
         <><p>To-do List:</p><ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-            <li>Item 3</li>
+            <Task/>
         </ul></>);
 }
 
