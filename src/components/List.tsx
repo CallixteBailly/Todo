@@ -1,9 +1,11 @@
 import Task from './Task';
 
-function List() {
+function List(props: { tasks: any[]; }) {
     return (
         <><p>To-do List:</p><ul>
-            <Task/>
+            {props.tasks.map((item: any, index: any) => (
+                <Task key={index} item={item} />
+            ))}
         </ul></>);
 }
 

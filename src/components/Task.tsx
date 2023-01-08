@@ -1,7 +1,7 @@
 import React from 'react';
 
-function Task() {
-    return (<li>Item</li>);
+function Task(props) {
+    return (<li>{props.item}</li>);
 }
 
 export default Task;
