@@ -5,12 +5,16 @@ function Task(props) {
 
     function handleClick() {
         setIsCompleted(prevState => !prevState);
-      }
-    
-      return (
-        <li onClick={handleClick} style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
-          {props.item}
-        </li>)
+    }
+
+    return (
+        <li style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
+            {props.item}
+            <button onClick={handleClick}>
+                {isCompleted ? 'Completed' : 'Work in progress'}
+            </button>
+        </li>
+    )
 }
 
 export default Task;
