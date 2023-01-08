@@ -1,5 +1,4 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom";
-import App from "./components/App";
+import List from "./components/List";
 
-ReactDOM.render(<App message="Hello World React with Webpack (dev/prod)"/>, document.getElementById("root"));
+ReactDOM.render(<List />, document.getElementById("root"));
