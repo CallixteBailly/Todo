@@ -7,8 +7,11 @@ function List(props: { tasks: any[]; }) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        setTasks([...tasks, newTask]);
-        setNewTask('');
+        if (newTask.trim().length !== 0) {
+            setTasks([...tasks, newTask]);
+            setNewTask('');
+        }
+
     }
 
     return (
@@ -17,8 +20,8 @@ function List(props: { tasks: any[]; }) {
                 <p>No tasks to display</p>
             ) : (
                 <ul>
-                    {tasks.map((task, index) => (
-                        <li key={index}>{task}</li>
+                    {tasks.map((task: any, index: any) => (
+                        <Task item={task}></Task>
                     ))}
                 </ul>
             )}
