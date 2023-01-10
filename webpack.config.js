@@ -27,6 +27,9 @@ module.exports = {
             }
         ]
     },
+    devServer: {
+        historyApiFallback: true,
+      },
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js']  // Indiquer à webpack les extensions de fichiers qu'il doit prendre en compte lors de la résolution des imports
     }
