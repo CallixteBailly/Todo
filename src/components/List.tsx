@@ -1,34 +1,52 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import Task from './Task';
 
-function List(props: { tasks: any[]; }) {
+const validationSchema = Yup.object().shape({
+    newTask: Yup.string()
+        .matches(/^[a-zA-Z0-9\s]*$/, 'Text must not contain special characters')
+        .min(3, 'Text must be at least 3 characters long!')
+        .max(25, 'Text must be at max 25 characters long!')
+        .test('not-empty-spaces', 'Text must not contain only spaces',
+            value => !(value!.trim().length === 0))
+        .required('Required'),
+});
+
+function List(props) {
     const [tasks, setTasks] = useState(props.tasks);
-    const [newTask, setNewTask] = useState('');
-
-    function handleSubmit(event) {
-        event.preventDefault();
-        if (newTask.trim().length !== 0) {
-            setTasks([...tasks, newTask]);
-            setNewTask('');
-        }
-
-    }
-
     return (
-        <><p>To-do List:</p>
+        <>
+            <p>To-do List:</p>
             {tasks.length === 0 ? (
                 <p>No tasks to display</p>
             ) : (
                 <ul>
                     {tasks.map((task: any, index: any) => (
-                        <Task item={task}></Task>
+                        <Task item={task} key={index} />
                     ))}
                 </ul>
             )}
-            <form onSubmit={handleSubmit}>
-                <input value={newTask} onChange={event => setNewTask(event.target.value)} />
-                <button type="submit">Add task</button>
-            </form></>);
+            <Formik
+                initialValues={{ newTask: '' }}
+                validationSchema={validationSchema}
+                onSubmit={(values, { setSubmitting }) => {
+                    setTasks([...tasks, values.newTask]);
+                    setSubmitting(false);
+                }}
+            >
+                {({ errors, touched }) => (
+                    <Form>
+                        <Field type="text" name="newTask" />
+                        {errors.newTask && touched.newTask && (
+                            <div className="error">{errors.newTask}</div>
+                        )}
+                        <button type="submit">Add task</button>
+                    </Form>
+                )}
+            </Formik>
+        </>
+    );
 }
 
 export default List;
