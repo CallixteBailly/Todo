@@ -1,5 +1,21 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom";
-import App from "./components/App";
+import { BrowserRouter as Router, Switch, Link, Route } from 'react-router-dom'
+import List from "./components/List";
 
-ReactDOM.render(<App message="Hello World React with Webpack (dev/prod)"/>, document.getElementById("root"));
+const Home: React.FC = () => {
+    return <h2>Accueil</h2>;
+}
+
+const tasks = [];
+
+ReactDOM.render(
+    <Router>
+        <nav>
+            <Link to="/">Accueil</Link>
+            <Link to="/list">List</Link>
+        </nav>
+        
+        <Route exact path="/" component={Home} />
+        <Route path="/list" render={() => <List tasks={tasks} />} />
+    </Router>
+    , document.getElementById("root"));

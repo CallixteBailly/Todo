@@ -8,7 +8,8 @@ module.exports = merge(
         mode: "production", // Indiquer à webpack que nous sommes en mode production
         output: {
             path: path.join(__dirname, '/dist'), // Définir le répertoire de destination du bundle
-            filename: 'bundle.js' // Définir le nom du bundle
+            filename: 'bundle.js', // Définir le nom du bundle
+            publicPath: '/'            
         }
     }
 );
