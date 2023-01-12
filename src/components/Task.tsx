@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-function Task(props) {
+interface Props{
+    item: string;
+}
+
+const Task: React.FC<Props> = (props) => {
     const [isCompleted, setIsCompleted] = useState(false);
 
     function handleClick() {

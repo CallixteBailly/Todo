@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 import { Formik, Form, Field } from 'formik'; // Formik est une librairie qui permet de faciliter la gestion des formulaires en React
 import * as Yup from 'yup'; // Yup est une librairie de validation de formulaire
 import Task from './Task'; // Composant Task
@@ -14,8 +15,12 @@ const validationSchema = Yup.object().shape({
         .required('Required'), // Le champ est obligatoire
 });
 
+interface Props {
+    tasks: Array<string>;
+}
+
 // Composant List 
-function List(props) {
+const List: React.FC<Props> = (props) => {
     const [tasks, setTasks] = useState(props.tasks); // On utilise un state pour stocker les tâches qui sont passées en propriété à ce composant
     return (
         <>
@@ -24,8 +29,8 @@ function List(props) {
                 <p>No tasks to display</p>
             ) : (
                 <ul>
-                    {tasks.map((task: any, index: any) => (
-                        <Task item={task} key={index} /> // Si non on affiche une liste de tâches en utilisant le composant
+                    {tasks.map((task: string, index: number) => (
+                        <Task key={index} item={task} /> // Si non on affiche une liste de tâches en utilisant le composant
                     ))}
                 </ul>
             )}
@@ -39,11 +44,11 @@ function List(props) {
             >
                 {({ errors, touched }) => ( // On utilise les propriétés errors et touched fournies par Formik pour gérer l'affichage des erreurs de validation
                     <Form>
-                        <Field type="text" name="newTask" /> // On ajoute un champ pour entrer une nouvelle tâche
+                        <Field type="text" name="newTask" />
                         {errors.newTask && touched.newTask && ( // Si il y a des erreurs pour le champ newTask, on les affiche à l'utilisateur
                             <div className="error">{errors.newTask}</div>
                         )}
-                        <button type="submit">Add task</button> // On ajoute un bouton submit pour soumettre le formulaire
+                        <button type="submit">Add task</button>
                     </Form>
                 )}
             </Formik>
