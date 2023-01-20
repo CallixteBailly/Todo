@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         // Définir la cible de transpilation du code
-        "target": "ES3",
+        "target": "es2017",
         // Définir le module à utiliser pour la transpilation
-        "module": "CommonJS",
+        "module": "commonjs",
         // Activer les contrôles stricts des valeurs null
         "strictNullChecks": true,
         // Activer l'interopérabilité des modules ES
