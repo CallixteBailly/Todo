@@ -1,19 +1,12 @@
 import { useEffect } from "react";
 
-import { postTodo, getTodos, putTodo, deleteTodo } from "../api";
+import { postTodo, getTodos, putTodo, deleteTodo, postItem } from "../api";
 
 interface TodoList {
     id: number;
     title: string;
     items: any[];
 }
-
-interface TodoLists {
-    lists: TodoList[];
-}
-
-
-
 
 export const fetchTodos = async () => {
     try {
@@ -50,3 +43,13 @@ export const updateTodo = async (id: number, title: string) => {
         throw error;
     }
 };
+
+
+export const addTodoItem = async (listId: number, title: string) => {
+    try {
+        const response = await postItem(listId, title);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

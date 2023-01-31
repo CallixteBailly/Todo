@@ -11,8 +11,8 @@ const validationSchema = Yup.object().shape({
         .matches(/^[a-zA-Z0-9\s]*$/, 'Text must not contain special characters') // On vérifie que le champ ne contient pas de caractère spéciaux
         .min(3, 'Text must be at least 3 characters long!') // On vérifie que le champ a une longueur minimale de 3 caractères
         .max(25, 'Text must be at max 25 characters long!') // On vérifie que le champ a une longueur maximale de 25 caractères
-        .test('not-empty-spaces', 'Text must not contain only spaces', // On vérifie que le champ ne contient pas uniquement des espaces
-            value => !(value!.trim().length === 0))
+        // .test('not-empty-spaces', 'Text must not contain only spaces', // On vérifie que le champ ne contient pas uniquement des espaces
+        //     value => !(value!.trim().length === 0))
         .required('Required'), // Le champ est obligatoire
 });
 
@@ -30,14 +30,18 @@ interface TodoLists {
 const List: React.FC = () => {
     const [tasks, setTasks] = useState<TodoLists>(); // On utilise un state pour stocker les tâches qui sont passées en propriété à ce composant
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         fetchTodos()
             .then(data => {
                 setTasks(data);
+                setLoading(false);
             })
             .catch(err => {
                 setError(err.message);
+                setLoading(false);
             });
     }, []);
 
@@ -63,25 +67,11 @@ const List: React.FC = () => {
     return (
         <>
             <p>To-do List:</p>
-            {tasks && tasks.lists.length === 0 ? ( // On vérifie si la liste de tâches est vide,
-                <p>No tasks to display</p>
-            ) : (
-                <ul>
-                    {tasks?.lists.map((task: TodoList, index: number) => (
-                        <>
-                            <h3>{task.title}</h3>
-                            <button onClick={() => handleDelete(task.id)}>Delete</button>
-                            <Task key={index} items={task.items} />
-                        </>
-                    ))}
-                </ul>
-            )}
             <Formik
                 initialValues={{ newTask: '' }} // On définit les valeurs initiales pour le champ newTask
                 validationSchema={validationSchema} // On utilise notre schéma de validation pour valider les données du formulaire
                 onSubmit={(values, { setSubmitting }) => {
                     addTodo(values.newTask);
-                    refresh();
                     setSubmitting(false);
                 }}
             >
@@ -95,6 +85,32 @@ const List: React.FC = () => {
                     </Form>
                 )}
             </Formik>
+            {tasks && tasks.lists.length === 0 ? ( // On vérifie si la liste de tâches est vide,
+                <p>No Items to display</p>
+            ) : (
+                <>
+                    <div>
+                        {loading && <p>Loading...</p>}
+                        {error && <p>Error: {error}</p>}
+                        {tasks?.lists.map((task: TodoList) => (
+                            <>
+                                <div key={task.id}>
+                                    <div>
+                                        <h1>Title: {task.title}</h1>
+                                        <p>Id: {task.id}</p>
+                                        <button onClick={() => handleDelete(task.id)}>Delete</button>
+                                    </div>
+                                    <br></br>
+                                    <div>
+                                        <p>Add Items</p>
+                                        <Task listId={task.id} items={task.items} />
+                                    </div>
+                                </div>
+                            </>
+                        ))}
+                    </div>
+                </>
+            )}
         </>
     );
 }

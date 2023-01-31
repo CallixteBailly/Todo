@@ -16,7 +16,7 @@ const api = axios.create({
     baseURL: 'https://localhost:7049',
     timeout: 3000,
     headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTI4NGVhMy1lZGUwLTQ1YjItYjg3Ni0xODY1MjRhZTY3M2IiLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiQmFpbGx5IiwianRpIjoiNDlmYmJlMjUtNWQ4Ny00OWU3LTkzYTQtNGQ5YzdiOTU5NGVlIiwiZXhwIjoxNjc0MjIzMDQ3LCJpc3MiOiJXZWF0IiwiYXVkIjoiV2VhdCJ9.-MvUL0pAS_Gul7rTcf9wLX2iyeRtCJM3hSnFh-ZllQw',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTI4NGVhMy1lZGUwLTQ1YjItYjg3Ni0xODY1MjRhZTY3M2IiLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiQmFpbGx5IiwianRpIjoiODg1MWY0NjYtMzQ4Yy00Y2YwLThhYTAtM2Y0ZTkwNzY3ZGQwIiwiZXhwIjoxNjc1MTgzOTc4LCJpc3MiOiJXZWF0IiwiYXVkIjoiV2VhdCJ9.IvTmEgofYc01aPvXNK_-IRQVD9Lg4oFhvmkoadOGvTI',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
     }
@@ -67,5 +67,23 @@ export const deleteTodo = (id: number) => {
 export const putTodo = (id: number, title: string) => {
     return api.post<TodoLists>(`/TodoLists/${id}`, { title: title });
 }
+
+// Fonction pour obtenir la liste des todos
+export const getItems = () => {
+    return api.get<TodoLists>('/TodoItems');
+};
+
+export const postItem = (listId: number, title: string) => {
+    return api.post<TodoLists>('/TodoItems', { listId: listId, title: title });
+}
+
+export const deleteItem = (id: number) => {
+    return api.delete<TodoLists>(`/TodoItems/${id}`);
+}
+
+export const putItem = (id: number, title: string) => {
+    return api.post<TodoLists>(`/TodoItems/${id}`, { title: title });
+}
+
 
 export default api;
