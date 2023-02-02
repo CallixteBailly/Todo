@@ -16,7 +16,7 @@ const api = axios.create({
     baseURL: 'https://localhost:7049',
     timeout: 3000,
     headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTI4NGVhMy1lZGUwLTQ1YjItYjg3Ni0xODY1MjRhZTY3M2IiLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiQmFpbGx5IiwianRpIjoiODg1MWY0NjYtMzQ4Yy00Y2YwLThhYTAtM2Y0ZTkwNzY3ZGQwIiwiZXhwIjoxNjc1MTgzOTc4LCJpc3MiOiJXZWF0IiwiYXVkIjoiV2VhdCJ9.IvTmEgofYc01aPvXNK_-IRQVD9Lg4oFhvmkoadOGvTI',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTI4NGVhMy1lZGUwLTQ1YjItYjg3Ni0xODY1MjRhZTY3M2IiLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiQmFpbGx5IiwianRpIjoiMjFiMjIyMWUtZjBmYS00MDkyLTgyYmUtM2I4NDE2ZmZiODcxIiwiZXhwIjoxNjc1MzQ5MDI0LCJpc3MiOiJXZWF0IiwiYXVkIjoiV2VhdCJ9.n3Tbto9RDZeZXz9NYvZCGuSG9wYCua6DwlSj1WS-ZXk',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
     }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
+import { useQuery } from 'react-query';
 import { Formik, Form, Field } from 'formik'; // Formik est une librairie qui permet de faciliter la gestion des formulaires en React
 import * as Yup from 'yup'; // Yup est une librairie de validation de formulaire
 import { fetchTodos, addTodo, deleteTodoById } from './TodoServices';
@@ -28,41 +29,32 @@ interface TodoLists {
 
 // Composant List 
 const List: React.FC = () => {
-    const [tasks, setTasks] = useState<TodoLists>(); // On utilise un state pour stocker les tâches qui sont passées en propriété à ce composant
+    const { data, isLoading, refetch } = useQuery('tasks', fetchTodos, {
+        refetchOnWindowFocus: false,
+    });
+    
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setLoading(true);
-        fetchTodos()
-            .then(data => {
-                setTasks(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, []);
 
     const handleDelete = async (id: number) => {
         try {
             await deleteTodoById(id);
-            refresh();
+            refetch();
         } catch (error) {
             setError(error.message);
         }
     }
 
-    function refresh() {
-        fetchTodos()
-            .then(data => {
-                setTasks(data);
-            })
-            .catch(err => {
-                setError(err.message);
-            });
+    const handleSubmit = async (newTask: string) => {
+        try {
+            await addTodo(newTask);
+            refetch();
+        } catch (error) {
+            setError(error.message);
+        }
     }
+
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <>
@@ -71,12 +63,12 @@ const List: React.FC = () => {
                 initialValues={{ newTask: '' }} // On définit les valeurs initiales pour le champ newTask
                 validationSchema={validationSchema} // On utilise notre schéma de validation pour valider les données du formulaire
                 onSubmit={(values, { setSubmitting }) => {
-                    addTodo(values.newTask);
+                    handleSubmit(values.newTask);
                     setSubmitting(false);
                 }}
             >
                 {({ errors, touched }) => ( // On utilise les propriétés errors et touched fournies par Formik pour gérer l'affichage des erreurs de validation
-                    <Form>
+                    <Form >
                         <Field type="text" name="newTask" />
                         {errors.newTask && touched.newTask && ( // Si il y a des erreurs pour le champ newTask, on les affiche à l'utilisateur
                             <div className="error">{errors.newTask}</div>
@@ -85,14 +77,12 @@ const List: React.FC = () => {
                     </Form>
                 )}
             </Formik>
-            {tasks && tasks.lists.length === 0 ? ( // On vérifie si la liste de tâches est vide,
+            {data?.lists && data?.lists.length === 0 ? ( // On vérifie si la liste de tâches est vide,
                 <p>No Items to display</p>
             ) : (
                 <>
                     <div>
-                        {loading && <p>Loading...</p>}
-                        {error && <p>Error: {error}</p>}
-                        {tasks?.lists.map((task: TodoList) => (
+                        {data?.lists.map((task: TodoList) => (
                             <>
                                 <div key={task.id}>
                                     <div>

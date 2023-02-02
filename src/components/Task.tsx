@@ -1,11 +1,12 @@
+import { useQuery } from 'react-query';
 import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup'; // Yup est une librairie de validation de formulaire
 import { deleteItem } from '../api';
-import { addTodoItem } from './TodoServices';
+import { addTodoItem, fetchTodos } from './TodoServices';
 
 const validationSchema = Yup.object().shape({
-    newTask: Yup.string() // on indique qu'on travaille sur un champ de type string
+    newItem: Yup.string() // on indique qu'on travaille sur un champ de type string
         .matches(/^[a-zA-Z0-9\s]*$/, 'Text must not contain special characters') // On vérifie que le champ ne contient pas de caractère spéciaux
         .min(3, 'Text must be at least 3 characters long!') // On vérifie que le champ a une longueur minimale de 3 caractères
         .max(25, 'Text must be at max 25 characters long!') // On vérifie que le champ a une longueur maximale de 25 caractères
@@ -24,37 +25,49 @@ interface TodoItems {
 }
 
 const Task: React.FC<TodoItems> = (props) => {
-    const [isCompleted, setIsCompleted] = useState(false);
+    const { isLoading, refetch } = useQuery('tasks', fetchTodos, {
+        refetchOnWindowFocus: false,
+    });
     const [error, setError] = useState('');
 
-    function handleClick() {
-        setIsCompleted(prevState => !prevState);
-    }
     const handleDelete = async (id: number) => {
         try {
             await deleteItem(id);
+            refetch();
         } catch (error) {
             setError(error.message);
         }
     }
+
+    const handleSubmit = async (listId: number,newItem: string) => {
+        try {
+            await addTodoItem(props.listId, newItem);
+            refetch();
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <>
             <div>
                 <Formik
 
-                    initialValues={{ newTask: '' }} // On définit les valeurs initiales pour le champ newTask
+                    initialValues={{ newItem: '' }} // On définit les valeurs initiales pour le champ newTask
                     validationSchema={validationSchema} // On utilise notre schéma de validation pour valider les données du formulaire
                     onSubmit={(values, { setSubmitting }) => {
-                        addTodoItem(props.listId, values.newTask);
+                        handleSubmit(props.listId, values.newItem);
                         setSubmitting(false);
                     }}
                 >
                     {({ errors, touched }) => ( // On utilise les propriétés errors et touched fournies par Formik pour gérer l'affichage des erreurs de validation
                         <Form>
-                            <Field type="text" name="newTask" />
-                            {errors.newTask && touched.newTask && ( // Si il y a des erreurs pour le champ newTask, on les affiche à l'utilisateur
-                                <div className="error">{errors.newTask}</div>
+                            <Field type="text" name="newItem" />
+                            {errors.newItem && touched.newItem && ( // Si il y a des erreurs pour le champ newTask, on les affiche à l'utilisateur
+                                <div className="error">{errors.newItem}</div>
                             )}
                             <button type="submit">Add Item</button>
                         </Form>
