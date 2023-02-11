@@ -32,7 +32,7 @@ const List: React.FC = () => {
     const { data, isLoading, refetch } = useQuery('tasks', fetchTodos, {
         refetchOnWindowFocus: false,
     });
-    
+
     const [error, setError] = useState('');
 
     const handleDelete = async (id: number) => {
@@ -83,7 +83,6 @@ const List: React.FC = () => {
                 <>
                     <div>
                         {data?.lists.map((task: TodoList) => (
-                            <>
                                 <div key={task.id}>
                                     <div>
                                         <h1>Title: {task.title}</h1>
@@ -96,7 +95,6 @@ const List: React.FC = () => {
                                         <Task listId={task.id} items={task.items} />
                                     </div>
                                 </div>
-                            </>
                         ))}
                     </div>
                 </>

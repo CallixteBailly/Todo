@@ -39,7 +39,7 @@ const Task: React.FC<TodoItems> = (props) => {
         }
     }
 
-    const handleSubmit = async (listId: number,newItem: string) => {
+    const handleSubmit = async (listId: number, newItem: string) => {
         try {
             await addTodoItem(props.listId, newItem);
             refetch();
@@ -77,14 +77,11 @@ const Task: React.FC<TodoItems> = (props) => {
                     <p>No tasks to display</p>
                 ) : (
                     props.items?.map((item: TodoItem) => (
-                        <>
-                            <div key={item.id}>
+                        <div key={item.id}>
                                 <p>Title: {item.title}</p>
                                 <p>Item: {item.id}</p>
                                 <button onClick={() => handleDelete(item.id)}>Delete</button>
                             </div>
-                            <br></br>
-                        </>
                     ))
                 )}
             </div>

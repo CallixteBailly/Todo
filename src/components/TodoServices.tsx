@@ -1,12 +1,4 @@
-import { useEffect } from "react";
-
 import { postTodo, getTodos, putTodo, deleteTodo, postItem } from "../api";
-
-interface TodoList {
-    id: number;
-    title: string;
-    items: any[];
-}
 
 export const fetchTodos = async () => {
     try {

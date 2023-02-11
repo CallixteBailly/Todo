@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import jwtDecode from 'jwt-decode';
 
 interface TodoList {
     id: number;
@@ -10,13 +11,10 @@ interface TodoLists {
     lists: TodoList[];
 }
 
-
-
 const api = axios.create({
     baseURL: 'https://localhost:7049',
     timeout: 3000,
     headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTI4NGVhMy1lZGUwLTQ1YjItYjg3Ni0xODY1MjRhZTY3M2IiLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiQmFpbGx5IiwianRpIjoiMjFiMjIyMWUtZjBmYS00MDkyLTgyYmUtM2I4NDE2ZmZiODcxIiwiZXhwIjoxNjc1MzQ5MDI0LCJpc3MiOiJXZWF0IiwiYXVkIjoiV2VhdCJ9.n3Tbto9RDZeZXz9NYvZCGuSG9wYCua6DwlSj1WS-ZXk',
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
     }
@@ -33,8 +31,7 @@ api.interceptors.response.use(
     (error: any) => {
         if (error.response) {
             if (error.response.status === 401) {
-                console.log("Bearer token expired, please login again");
-                return Promise.reject(new Error("Bearer token expired, please login again"));
+                return Promise.reject(new Error("Your account is expired, please login again"));
             }
             console.log(error.response.data);
             console.log(error.response.status);
@@ -69,21 +66,30 @@ export const putTodo = (id: number, title: string) => {
 }
 
 // Fonction pour obtenir la liste des todos
-export const getItems = () => {
-    return api.get<TodoLists>('/TodoItems');
+export const getItems = async () => {
+    return await api.get<TodoLists>('/TodoItems');
 };
 
-export const postItem = (listId: number, title: string) => {
-    return api.post<TodoLists>('/TodoItems', { listId: listId, title: title });
+export const postItem = async (listId: number, title: string) => {
+    return await api.post<TodoLists>('/TodoItems', { listId: listId, title: title });
 }
 
-export const deleteItem = (id: number) => {
-    return api.delete<TodoLists>(`/TodoItems/${id}`);
+export const deleteItem = async (id: number) => {
+    return await api.delete<TodoLists>(`/TodoItems/${id}`);
 }
 
-export const putItem = (id: number, title: string) => {
-    return api.post<TodoLists>(`/TodoItems/${id}`, { title: title });
+export const putItem = async (id: number, title: string) => {
+    return await api.post<TodoLists>(`/TodoItems/${id}`, { title: title });
 }
 
+export const login = async (email: string, password: string) => {
+    const response = await api.post('/authentication/login', { Email: email, Password: password });
+    const { token, firstName, lastName } = response.data;
 
+    localStorage.setItem('token', token);
+    localStorage.setItem('firstname', firstName);
+    localStorage.setItem('lastname', lastName);
+
+    api.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+}
 export default api;
