@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        // Définir la cible de transpilation du code
+        "target": "es2017",
+        // Définir le module à utiliser pour la transpilation
+        "module": "commonjs",
+        // Activer les contrôles stricts des valeurs null
+        "strictNullChecks": true,
+        // Activer l'interopérabilité des modules ES
+        "esModuleInterop": true,
+        // Définir le type de JSX à utiliser
+        "jsx": "react-jsx",
+    },
+    "include": [
+        // Indiquer les répertoires à inclure dans la transpilation
+        "src"
+    ]
+}
